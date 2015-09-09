@@ -4,16 +4,17 @@ function sectionListings(key) {
 	console.log('here');
 }
 
-function buildSections(data) {
-	for(var index = 0; index < data.length; index++) {
-		var catName = data[index]['name'];
-		var catKey = data[index]['key'];
-		$('#main').append('<div id="' + catName + '" onClick="sectionListings(' + catKey + ')">' + catName + '</div>');
-	}
-}
-
 function generateUI(data) {
-	buildSections(data);
+	$.each(data, function(index, section) {
+		var sectionName = section.name;
+		var sectionKey = section.key;
+		var sectionItems = section.items;
+		$('#main').append('<div id="' + sectionKey + '" onClick="sectionListings(' + sectionKey + ')">' + sectionName + '</div>');
+		$.each(sectionItems, function(index, item) {
+			console.log(sectionKey);
+			$('#' + sectionKey).append('<div id="' + item.id + '">' + item.title + '</div>');
+		});
+	});
 }
 
 document.addEventListener('DOMContentLoaded', function() {
