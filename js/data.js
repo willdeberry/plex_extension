@@ -17,13 +17,18 @@ function getItems(data) {
 				dataType: 'xml',
 			}).done(function(xml) {
 				var container = $(xml).find('MediaContainer');
+				var totalItems = $(container).attr('size');
 				$(container).find('Video').each(function() {
 					var title = $(this).attr('title');
 					var thumb = $(this).attr('thumb');
+					var contentRating = $(this).attr('contentRating');
+					var year = $(this).attr('year');
+					var rating = $(this).attr('rating');
+					var duration = $(this).attr('duration');
 					var id = $(this).find('Media').find('Part').attr('id');
-					items.push({'title': title, 'thumb': thumb, 'id': id});
+					items.push({'title': title, 'thumb': thumb, 'id': id, 'contentRating': contentRating, 'year': year, 'rating': rating, 'duration': duration});
 				});
-				collection.push({'name': name, 'key': key, 'items': items});
+				collection.push({'name': name, 'key': key, 'items': items, 'totalItems': totalItems});
 				count++
 				if (count == data.length) {
 					d.resolve(collection);

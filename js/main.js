@@ -5,12 +5,18 @@ function toggleCollapse(key) {
 	$('#list-group' + key).collapse('toggle');
 }
 
+function convertDuration(seconds) {
+	var date = new Date(null);
+	date.setSeconds(seconds);
+	return date.toISOString().substr(11, 8);
+}
+
 function generateUI(data) {
 	$.each(data, function(index, section) {
 		$('#main').prepend('<div class="panel panel-default" id="panel' + section.key + '">');
 		$('#panel' + section.key).append(
 			'<div class="panel-heading" id="panel-head' + section.key + '" role="tab">'
-				+ '<h4 class="panel-title">' + section.name + '</h4>'
+				+ '<h4 class="panel-title"><span class="badge">' + section.totalItems + '</span>  ' + section.name + '</h4>'
 			+ '</div>'
 		);
 		$('#panel' + section.key).append('<div class="list-group panel-collapse collapse" id="list-group' + section.key + '" role="tabpanel" aria-labelledby="panel-head' + section.key + '" aria-expanded="false"></div>');
@@ -21,10 +27,24 @@ function generateUI(data) {
 						+ '<img class="img-thumbnail" src="' + server + item.thumb + '"/>'
 					+ '</div>'
 					+ '<div class="col-xs-6 col-sm-6">'
-						+ item.title
-					+ '</div>'
-					+ '<div class="col-xs-6 col-sm-6">'
-						+ '<button class="btn btn-default" type="submit">Button</button>'
+						+ '<table class="table table-condensed">'
+							+ '<tr>'
+								+ '<th>Year Released:</th>'
+								+ '<td>' + item.year + '</td>'
+							+ '</tr>'
+							+ '<tr>'
+								+ '<th>Content Rating:</th>'
+								+ '<td>' + item.contentRating + '</td>'
+							+ '</tr>'
+							+ '<tr>'
+								+ '<th>Duration:</th>'
+								+ '<td>' + item.duration + '</td>'
+							+ '</tr>'
+							+ '<tr>'
+								+ '<th>Stars:</th>'
+								+ '<td>' + item.rating + '/10</td>'
+							+ '</tr>'
+						+ '</table>'
 					+ '</div>'
 				+ '</div>'
 			);

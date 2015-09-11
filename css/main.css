@@ -5,3 +5,7 @@ body {
 .list-group-item {
 	overflow: hidden;
 }
+
+tbody {
+	font-size: small;
+}
