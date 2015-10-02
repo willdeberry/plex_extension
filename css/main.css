@@ -2,6 +2,10 @@ body {
 	width: 350px;
 }
 
+.hidden {
+	display: none;
+}
+
 .list-group-item {
 	overflow: hidden;
 }

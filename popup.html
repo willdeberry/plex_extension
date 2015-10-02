@@ -4,7 +4,30 @@
 		<link rel="stylesheet" href="css/main.css">
 	</head>
 	<body>
-		<div class="container-fluid">
+		<div class="container-fluid" id="login">
+			<div class="row">
+				<form class="form-horizontal">
+					<div class="form-group">
+						<label for="inputUsername" class="col-xs-3 col-sm-3 control-label">Username</label>
+						<div class="col-xs-9 col-sm-9">
+							<input name="username" type="text" class="form-control" id="inputUsername" placeholder="Username">
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="inputPassword" class="col-xs-3 col-sm-3 control-label">Password</label>
+						<div class="col-xs-9 col-sm-9">
+							<input type="password" name="password" class="form-control" id="inputPassword" placeholder="Password">
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-xs-offset-3 col-sm-offset-3 col-xs-9 col-sm-9">
+							<button id="loginButton" class="btn btn-default">Sign in</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+		<div class="container-fluid hidden" id="content">
 			<div class="row">
 				<div class="panel-group" id="main" role="tablist" aria-multiselectable="true">
 					<div id="list-div"></div>
@@ -13,6 +36,7 @@
 		</div>
 	</body>
 	<script src="js/jquery.min.js"></script>
+	<script src="js/jquery_binary.js"></script>
 	<script src="js/bootstrap.min.js"></script>
 	<script src="js/data.js"></script>
 	<script src="js/main.js"></script>

@@ -15,6 +15,9 @@ function getItems(data) {
 				url: itemsData,
 				type: 'get',
 				dataType: 'xml',
+				beforeSend: function(xhr) {
+					xhr.setRequestHeader("X-Plex-Token", authToken);
+				}
 			}).done(function(xml) {
 				var container = $(xml).find('MediaContainer');
 				var totalItems = $(container).attr('size');
@@ -46,6 +49,9 @@ function getSectionKeys() {
 		url: sections,
 		type: 'get',
 		dataType: 'xml',
+		beforeSend: function(xhr) {
+			xhr.setRequestHeader("X-Plex-Token", authToken);
+		}
 	}).done(function(xml) {
 		var container = $(xml).find('MediaContainer');
 		$(container).find('Directory').each(function() {
