@@ -13,3 +13,7 @@ body {
 tbody {
 	font-size: small;
 }
+
+th {
+	width: 50%;
+}

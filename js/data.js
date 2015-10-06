@@ -1,48 +1,66 @@
 const server = 'http://sudoservers.com:32400';
 const sections = server + '/library/sections';
 
-function getItems(data) {
+function countItems(data) {
+	var total = 0;
+	for(var index = 0; index < data.length; index++) {
+		total += +data[index].totalItems;
+	};
+	return total;
+}
+
+function getItems(authToken, data) {
 	var d = $.Deferred();
 	var collection = [];
+	count = 0;
 	for(var index = 0; index < data.length; index++) {
-		count = 0;
 		(function(index, data) {
 			var items = [];
-			var key = data[index].key;
-			var name = data[index].name;
-			var itemsData = sections + '/' + key + '/all';
-			$.ajax({
-				url: itemsData,
-				type: 'get',
-				dataType: 'xml',
-				beforeSend: function(xhr) {
-					xhr.setRequestHeader("X-Plex-Token", authToken);
-				}
-			}).done(function(xml) {
-				var container = $(xml).find('MediaContainer');
-				var totalItems = $(container).attr('size');
-				$(container).find('Video').each(function() {
-					var title = $(this).attr('title');
-					var thumb = $(this).attr('thumb');
-					var contentRating = $(this).attr('contentRating');
-					var year = $(this).attr('year');
-					var rating = $(this).attr('rating');
-					var duration = $(this).attr('duration');
-					var id = $(this).find('Media').find('Part').attr('id');
-					items.push({'title': title, 'thumb': thumb, 'id': id, 'contentRating': contentRating, 'year': year, 'rating': rating, 'duration': duration});
+			var type = data[index].type;
+
+			function urlCall(index, data, category) {
+				var key = data[index].key;
+				var name = data[index].name;
+				var itemsData = sections + '/' + key + '/all';
+				$.ajax({
+					url: itemsData,
+					type: 'get',
+					dataType: 'xml',
+					beforeSend: function(xhr) {
+						xhr.setRequestHeader("X-Plex-Token", authToken);
+					}
+				}).done(function(xml) {
+					var container = $(xml).find('MediaContainer');
+					var totalItems = $(container).attr('size');
+					$(container).find(category).each(function() {
+						var title = $(this).attr('title');
+						var thumb = $(this).attr('thumb');
+						var contentRating = $(this).attr('contentRating');
+						var year = $(this).attr('year');
+						var rating = $(this).attr('rating');
+						var duration = $(this).attr('duration') / 1000 / 60;
+						var id = $(this).find('Media').find('Part').attr('id');
+						items.push({title: title, thumb: thumb, id: id, contentRating: contentRating, year: year, rating: rating, duration: duration.toFixed(0)});
+					});
+					collection.push({name: name, key: key, items: items, totalItems: totalItems});
+					count++;
+					if (count == data.length) {
+						d.resolve(collection);
+					}
 				});
-				collection.push({'name': name, 'key': key, 'items': items, 'totalItems': totalItems});
-				count++
-				if (count == data.length) {
-					d.resolve(collection);
-				}
-			});
+			}
+
+			if (type == 'show') {
+				urlCall(index, data, 'Directory');
+			} else {
+				urlCall(index, data, 'Video');
+			}
 		})(index, data);
 	}
 	return d.promise();
 }
 
-function getSectionKeys() {
+function getSectionKeys(authToken) {
 	var d = $.Deferred();
 	var sectionKeys = [];
 	$.ajax({
@@ -57,17 +75,18 @@ function getSectionKeys() {
 		$(container).find('Directory').each(function() {
 			var name = $(this).attr('title');
 			var key = $(this).attr('key');
-			sectionKeys.push({'name': name, 'key': key});
+			var type = $(this).attr('type');
+			sectionKeys.push({name: name, key: key, type: type});
 		});
 		d.resolve(sectionKeys);
 	});
 	return d.promise();
 }
 
-function gatherData() {
+function gatherData(authToken) {
 	var d = $.Deferred();
-	getSectionKeys().done(function(keys) {
-		getItems(keys).done(function(items) {
+	getSectionKeys(authToken).done(function(keys) {
+		getItems(authToken, keys).done(function(items) {
 			d.resolve(items);
 		});
 	});

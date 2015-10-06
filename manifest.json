@@ -9,5 +9,6 @@
 		},
 		"default_popup": "popup.html"
 	},
+	"permissions": ["storage"],
 	"manifest_version": 2
 }
