@@ -9,6 +9,34 @@ function countItems(data) {
 	return total;
 }
 
+function downloadThumbs(authToken, item) {
+	var d = $.Deferred();
+	$.ajax({
+		url: server + item.thumb,
+		type: 'get',
+		cache: false,
+		dataType: 'binary',
+		processData: false,
+		responseType:'arraybuffer',
+		beforeSend: function(xhr) {
+			xhr.setRequestHeader("X-Plex-Token", authToken);
+		}
+	}).done(function(img) {
+		var arr = new Uint8Array(img);
+		var raw = '';
+		var i,j,subArray,chunk = 5000;
+		for (i=0,j=arr.length; i<j; i+=chunk) {
+			subArray = arr.subarray(i,i+chunk);
+			raw += String.fromCharCode.apply(null, subArray);
+		}
+		var b64 = btoa(raw);
+		var dataURL = 'data:image/jpeg;base64,' + b64;
+		var image = {id: item.id, url: dataURL};
+		d.resolve(image);
+	});
+	return d.promise();
+}
+
 function getItems(authToken, data) {
 	var d = $.Deferred();
 	var collection = [];

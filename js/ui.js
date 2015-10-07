@@ -1,31 +1,3 @@
-function downloadThumbs(authToken, item) {
-	var d = $.Deferred();
-	$.ajax({
-		url: server + item.thumb,
-		type: 'get',
-		cache: false,
-		dataType: 'binary',
-		processData: false,
-		responseType:'arraybuffer',
-		beforeSend: function(xhr) {
-			xhr.setRequestHeader("X-Plex-Token", authToken);
-		}
-	}).done(function(img) {
-		var arr = new Uint8Array(img);
-		var raw = '';
-		var i,j,subArray,chunk = 5000;
-		for (i=0,j=arr.length; i<j; i+=chunk) {
-			subArray = arr.subarray(i,i+chunk);
-			raw += String.fromCharCode.apply(null, subArray);
-		}
-		var b64 = btoa(raw);
-		var dataURL = 'data:image/jpeg;base64,' + b64;
-		var image = {id: item.id, url: dataURL};
-		d.resolve(image);
-	});
-	return d.promise();
-}
-
 function generateUI(authToken, data) {
 	$.each(data, function(index, section) {
 		$('#main').prepend('<div class="panel panel-default" id="panel' + section.key + '">');
@@ -67,7 +39,7 @@ function generateUI(authToken, data) {
 				$('#img' + image.id).attr('src', image.url);
 				var imageObj = {};
 				imageObj[image.id] = image.url;
-				chrome.storage.local.set(imageObj, function() { console.log('image ' + image.id + ' saved'); });
+				//chrome.storage.local.set(imageObj, function() { console.log('image ' + image.id + ' saved'); });
 			});;
 		});
 		$('#panel-head' + section.key).on('click', function() { toggleCollapse(section.key); });
