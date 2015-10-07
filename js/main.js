@@ -1,3 +1,5 @@
+var server;
+
 function toggleCollapse(key) {
 	$('.in').collapse('toggle');
 	$('#list-group' + key).collapse('toggle');
@@ -13,19 +15,39 @@ function main(authToken) {
 
 	chrome.storage.local.get('data', function(result) {
 		if (chrome.runtime.lastError) {
-			console.log('1');
 			fail();
 		} else if (result.data) {
-			console.log('2');
 			generateUI(authToken, result.data);
 		} else {
-			console.log('3');
 			fail();
 		}
 	});
 }
 
+function serverInfo() {
+	chrome.storage.local.get('server', function(result) {
+		if (chrome.runtime.lastError) {
+			return false;
+		} else if (result.server) {
+			var host = result.server;
+			chrome.storage.local.get('port', function(result) {
+				if (chrome.runtime.lastError) {
+					return false;
+				} else if (result.port) {
+					var port = result.port;
+					server = host + ':' + port
+				} else {
+					return false;
+				}
+			});
+		} else {
+			return false;
+		}
+	});
+}
+
 document.addEventListener('DOMContentLoaded', function() {
+	serverInfo();
 	function go(authToken) {
 		$('#login').addClass('hidden');
 		$('#content').removeClass('hidden');

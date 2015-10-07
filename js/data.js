@@ -1,6 +1,3 @@
-const server = 'http://sudoservers.com:32400';
-const sections = server + '/library/sections';
-
 function countItems(data) {
 	var total = 0;
 	for(var index = 0; index < data.length; index++) {
@@ -38,6 +35,7 @@ function downloadThumbs(authToken, item) {
 }
 
 function getItems(authToken, data) {
+	const sections = server + '/library/sections';
 	var d = $.Deferred();
 	var collection = [];
 	count = 0;
@@ -89,6 +87,7 @@ function getItems(authToken, data) {
 }
 
 function getSectionKeys(authToken) {
+	const sections = server + '/library/sections';
 	var d = $.Deferred();
 	var sectionKeys = [];
 	$.ajax({
