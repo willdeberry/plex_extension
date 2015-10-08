@@ -12,6 +12,14 @@ function save() {
 		port = '32400';
 		chrome.storage.local.set({port: port}, function() { console.log('default port saved off') });
 	}
+
+	chrome.notifications.create('Plex Extension', {
+		iconUrl: chrome.runtime.getURL('images/icon_38.png'),
+		title: 'Plex Extension Settings',
+		type: 'basic',
+		message: 'Server information saved!',
+		isClickable: false
+	}, function() { console.log('notification generated') });
 }
 
 document.addEventListener('DOMContentLoaded', function() {
