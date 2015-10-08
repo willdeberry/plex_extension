@@ -8,6 +8,9 @@ function save() {
 
 	if (port) {
 		chrome.storage.local.set({port: port}, function() { console.log('port saved off') });
+	} else {
+		port = '32400';
+		chrome.storage.local.set({port: port}, function() { console.log('default port saved off') });
 	}
 }
 
