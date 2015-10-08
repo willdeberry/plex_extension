@@ -66,6 +66,9 @@ function getItems(authToken, data) {
 						var rating = $(this).attr('rating');
 						var duration = $(this).attr('duration') / 1000 / 60;
 						var id = $(this).find('Media').find('Part').attr('id');
+						if (!id) {
+							id = $(this).attr('key').replace(/\//g, '_');
+						}
 						items.push({title: title, thumb: thumb, id: id, contentRating: contentRating, year: year, rating: rating, duration: duration.toFixed(0)});
 					});
 					collection.push({name: name, key: key, items: items, totalItems: totalItems});

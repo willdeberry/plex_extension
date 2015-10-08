@@ -8,7 +8,6 @@ function toggleCollapse(key) {
 function main(authToken) {
 	function fail() {
 		gatherData(authToken).then(function(data) {
-			console.log(data);
 			chrome.storage.local.set({data: data}, function() { console.log('Data saved off'); });
 			generateUI(authToken, data);
 		});
