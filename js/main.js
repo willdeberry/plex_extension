@@ -6,7 +6,8 @@ function toggleCollapse(key) {
 }
 
 function clearLocalStorage() {
-	chrome.storage.local.clear()
+	chrome.storage.local.remove('data');
+	window.location.reload(false);
 }
 
 function main(authToken) {
