@@ -17,3 +17,8 @@ tbody {
 th {
 	width: 50%;
 }
+
+#refresh {
+	width: 20px;
+	height: 20px;
+}

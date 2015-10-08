@@ -5,6 +5,10 @@ function toggleCollapse(key) {
 	$('#list-group' + key).collapse('toggle');
 }
 
+function clearLocalStorage() {
+	chrome.storage.local.clear()
+}
+
 function main(authToken) {
 	function fail() {
 		gatherData(authToken).then(function(data) {
@@ -25,6 +29,11 @@ function main(authToken) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+	$('#refresh').on('click', function(event) {
+		event.preventDefault();
+		clearLocalStorage();
+	});
+
 	function failToOptionsPage() {
 		chrome.tabs.create({ url: "options.html" })
 	}
