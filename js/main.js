@@ -24,30 +24,11 @@ function main(authToken) {
 	});
 }
 
-function serverInfo() {
-	chrome.storage.local.get('server', function(result) {
-		if (chrome.runtime.lastError) {
-			return false;
-		} else if (result.server) {
-			var host = result.server;
-			chrome.storage.local.get('port', function(result) {
-				if (chrome.runtime.lastError) {
-					return false;
-				} else if (result.port) {
-					var port = result.port;
-					server = host + ':' + port
-				} else {
-					return false;
-				}
-			});
-		} else {
-			return false;
-		}
-	});
-}
-
 document.addEventListener('DOMContentLoaded', function() {
-	serverInfo();
+	function failToOptionsPage() {
+		chrome.tabs.create({ url: "options.html" })
+	}
+
 	function go(authToken) {
 		$('#login').addClass('hidden');
 		$('#content').removeClass('hidden');
@@ -62,14 +43,37 @@ document.addEventListener('DOMContentLoaded', function() {
 		});
 	}
 
-	chrome.storage.local.get('authToken', function(result) {
+	function retrieveAuthToken() {
+		chrome.storage.local.get('authToken', function(result) {
+			if (chrome.runtime.lastError) {
+				fail();
+			} else if (result.authToken) {
+				var authToken = result.authToken;
+				go(authToken);
+			} else {
+				fail();
+			}
+		});
+	}
+
+	chrome.storage.local.get('server', function(result) {
 		if (chrome.runtime.lastError) {
-			fail();
-		} else if (result.authToken) {
-			var authToken = result.authToken;
-			go(authToken);
+			failToOptionsPage();
+		} else if (result.server) {
+			var host = result.server;
+			chrome.storage.local.get('port', function(result) {
+				if (chrome.runtime.lastError) {
+					failToOptionsPage();
+				} else if (result.port) {
+					var port = result.port;
+					server = host + ':' + port;
+					retrieveAuthToken();
+				} else {
+					failToOptionsPage();
+				}
+			});
 		} else {
-			fail();
+			failToOptionsPage();
 		}
 	});
 });
