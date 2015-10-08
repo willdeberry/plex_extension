@@ -19,7 +19,9 @@ function save() {
 		type: 'basic',
 		message: 'Server information saved!',
 		isClickable: false
-	}, function() { console.log('notification generated') });
+	}, function(result) { console.log('notification generated') });
+
+	chrome.notifications.clear('Plex Extension');
 }
 
 document.addEventListener('DOMContentLoaded', function() {
